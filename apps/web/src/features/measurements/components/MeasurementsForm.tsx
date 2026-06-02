@@ -8,6 +8,9 @@ interface Props {
   onSave: (dto: UpsertMeasurementDto) => Promise<void>;
 }
 
+const inputClass = 'w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-black';
+const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
+
 const TALLAS = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 const FIELDS: { key: keyof UpsertMeasurementDto; label: string; unit: string }[] = [
@@ -59,8 +62,8 @@ export function MeasurementsForm({ initial, onSave }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label className="block text-sm font-medium mb-1">Talla estándar</label>
-        <select name="talla" defaultValue={initial?.talla ?? ''} className="w-full border rounded px-3 py-2">
+        <label className={labelClass}>Talla estándar</label>
+        <select name="talla" defaultValue={initial?.talla ?? ''} className={inputClass}>
           <option value="">Seleccionar talla</option>
           {TALLAS.map((t) => <option key={t} value={t}>{t}</option>)}
         </select>
@@ -69,14 +72,14 @@ export function MeasurementsForm({ initial, onSave }: Props) {
       <div className="grid grid-cols-2 gap-4">
         {FIELDS.map(({ key, label, unit }) => (
           <div key={key}>
-            <label className="block text-sm font-medium mb-1">{label} ({unit})</label>
+            <label className={labelClass}>{label} ({unit})</label>
             <input
               name={key}
               type="number"
               step="0.1"
               min="0"
               defaultValue={initial?.[key] ?? ''}
-              className="w-full border rounded px-3 py-2"
+              className={inputClass}
               placeholder="0.0"
             />
           </div>
