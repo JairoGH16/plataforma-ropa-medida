@@ -42,6 +42,9 @@ Thumbs.db
 # Security
 *.pem
 
+# Project docs (keep local only)
+*.pdf
+
 # Database
 *.db
 *.db-journal
