@@ -50,9 +50,16 @@ describe('AuthService', () => {
   describe('register', () => {
     it('should register a new user and return a token', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
-      mockPrisma.user.create.mockResolvedValue({ ...mockUser, password: 'hashed' });
+      mockPrisma.user.create.mockResolvedValue({
+        ...mockUser,
+        password: 'hashed',
+      });
 
-      const result = await service.register({ email: 'test@example.com', name: 'Test User', password: 'pass123' });
+      const result = await service.register({
+        email: 'test@example.com',
+        name: 'Test User',
+        password: 'pass123',
+      });
 
       expect(result.token).toBe('mock-token');
       expect(result.user.email).toBe('test@example.com');
@@ -62,17 +69,28 @@ describe('AuthService', () => {
     it('should throw ConflictException if email already exists', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(mockUser);
 
-      await expect(service.register({ email: 'test@example.com', name: 'Test', password: 'pass' }))
-        .rejects.toThrow(ConflictException);
+      await expect(
+        service.register({
+          email: 'test@example.com',
+          name: 'Test',
+          password: 'pass',
+        }),
+      ).rejects.toThrow(ConflictException);
     });
   });
 
   describe('login', () => {
     it('should login and return a token with valid credentials', async () => {
       const hashed = await bcrypt.hash('pass123', 10);
-      mockPrisma.user.findUnique.mockResolvedValue({ ...mockUser, password: hashed });
+      mockPrisma.user.findUnique.mockResolvedValue({
+        ...mockUser,
+        password: hashed,
+      });
 
-      const result = await service.login({ email: 'test@example.com', password: 'pass123' });
+      const result = await service.login({
+        email: 'test@example.com',
+        password: 'pass123',
+      });
 
       expect(result.token).toBe('mock-token');
       expect(result.user.email).toBe('test@example.com');
@@ -81,16 +99,21 @@ describe('AuthService', () => {
     it('should throw UnauthorizedException if user not found', async () => {
       mockPrisma.user.findUnique.mockResolvedValue(null);
 
-      await expect(service.login({ email: 'x@x.com', password: 'pass' }))
-        .rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.login({ email: 'x@x.com', password: 'pass' }),
+      ).rejects.toThrow(UnauthorizedException);
     });
 
     it('should throw UnauthorizedException if password is wrong', async () => {
       const hashed = await bcrypt.hash('correct', 10);
-      mockPrisma.user.findUnique.mockResolvedValue({ ...mockUser, password: hashed });
+      mockPrisma.user.findUnique.mockResolvedValue({
+        ...mockUser,
+        password: hashed,
+      });
 
-      await expect(service.login({ email: 'test@example.com', password: 'wrong' }))
-        .rejects.toThrow(UnauthorizedException);
+      await expect(
+        service.login({ email: 'test@example.com', password: 'wrong' }),
+      ).rejects.toThrow(UnauthorizedException);
     });
   });
 });

@@ -1,4 +1,8 @@
-import { Injectable, ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../../shared/prisma/prisma.service';
@@ -13,12 +17,19 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    const existing = await this.prisma.user.findUnique({ where: { email: dto.email } });
+    const existing = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
     if (existing) throw new ConflictException('Email already in use');
 
     const hashed = await bcrypt.hash(dto.password, 10);
     const user = await this.prisma.user.create({
-      data: { email: dto.email, name: dto.name, password: hashed, phone: dto.phone },
+      data: {
+        email: dto.email,
+        name: dto.name,
+        password: hashed,
+        phone: dto.phone,
+      },
     });
 
     const token = this.jwt.sign({ sub: user.id, role: user.role });
@@ -26,7 +37,9 @@ export class AuthService {
   }
 
   async login(dto: LoginDto) {
-    const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
     if (!user) throw new UnauthorizedException('Invalid credentials');
 
     const valid = await bcrypt.compare(dto.password, user.password);
@@ -36,7 +49,21 @@ export class AuthService {
     return { token, user: this.sanitize(user) };
   }
 
-  private sanitize(user: { id: string; email: string; name: string; role: string; phone: string | null; createdAt: Date }) {
-    return { id: user.id, email: user.email, name: user.name, role: user.role, phone: user.phone, createdAt: user.createdAt };
+  private sanitize(user: {
+    id: string;
+    email: string;
+    name: string;
+    role: string;
+    phone: string | null;
+    createdAt: Date;
+  }) {
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      phone: user.phone,
+      createdAt: user.createdAt,
+    };
   }
 }
