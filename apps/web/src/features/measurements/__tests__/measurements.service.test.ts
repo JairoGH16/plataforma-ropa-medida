@@ -10,7 +10,12 @@ const mockMeasurement = {
 global.fetch = jest.fn();
 
 function mockFetch(data: unknown, ok = true) {
-  (fetch as jest.Mock).mockResolvedValueOnce({ ok, json: async () => data });
+  const body = data === null ? '' : JSON.stringify(data);
+  (fetch as jest.Mock).mockResolvedValueOnce({
+    ok,
+    text: async () => body,
+    json: async () => data,
+  });
 }
 
 describe('measurements.service', () => {

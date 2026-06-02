@@ -7,7 +7,9 @@ export async function getMyMeasurements(token: string): Promise<Measurement | nu
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error('Failed to fetch measurements');
-  return res.json() as Promise<Measurement | null>;
+  const text = await res.text();
+  if (!text) return null;
+  return JSON.parse(text) as Measurement | null;
 }
 
 export async function saveMeasurements(token: string, data: UpsertMeasurementDto): Promise<Measurement> {
