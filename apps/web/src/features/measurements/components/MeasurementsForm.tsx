@@ -31,13 +31,20 @@ export function MeasurementsForm({ initial, onSave }: Props) {
     setError('');
     const form = new FormData(e.currentTarget);
 
-    const dto: UpsertMeasurementDto = {
-      talla: form.get('talla') as string || undefined,
+    const parseField = (name: string) => {
+      const val = form.get(name);
+      return val ? parseFloat(val as string) : undefined;
     };
-    for (const { key } of FIELDS) {
-      const val = form.get(key);
-      if (val) dto[key] = parseFloat(val as string);
-    }
+
+    const dto: UpsertMeasurementDto = {
+      talla: (form.get('talla') as string) || undefined,
+      cuello: parseField('cuello'),
+      pecho: parseField('pecho'),
+      cintura: parseField('cintura'),
+      cadera: parseField('cadera'),
+      largoManga: parseField('largoManga'),
+      largoPierna: parseField('largoPierna'),
+    };
 
     try {
       await onSave(dto);
