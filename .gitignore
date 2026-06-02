@@ -42,6 +42,10 @@ Thumbs.db
 # Security
 *.pem
 
+# Database
+*.db
+*.db-journal
+
 # Testing
 coverage/
 
