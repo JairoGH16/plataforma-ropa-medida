@@ -5,9 +5,7 @@ import * as bcrypt from 'bcryptjs';
 import { AuthService } from '../auth.service';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 
-jest.mock('../../../shared/prisma/prisma.service', () => ({
-  PrismaService: class {},
-}));
+jest.mock('../../../shared/prisma/prisma.service');
 
 const mockUser = {
   id: 'user-1',
