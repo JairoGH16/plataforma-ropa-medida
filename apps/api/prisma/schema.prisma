@@ -8,14 +8,30 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  role      Role     @default(CLIENT)
-  phone     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String       @id @default(cuid())
+  email       String       @unique
+  name        String
+  password    String
+  role        Role         @default(CLIENT)
+  phone       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  measurement Measurement?
+}
+
+model Measurement {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  talla         String?
+  cuello        Float?
+  pecho         Float?
+  cintura       Float?
+  cadera        Float?
+  largoManga    Float?
+  largoPierna   Float?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum Role {
