@@ -28,16 +28,16 @@ export default function MeasurementsPage() {
     setMeasurement(updated);
   }
 
-  if (loading) return <main className="min-h-screen flex items-center justify-center"><p>Cargando...</p></main>;
+  if (loading) return <main className="min-h-screen flex items-center justify-center"><p className="text-gray-700">Cargando...</p></main>;
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-10">
       <div className="max-w-lg mx-auto bg-white rounded-xl shadow p-8">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Mis medidas</h1>
-          <Link href="/profile" className="text-sm text-gray-500 hover:underline">← Perfil</Link>
+          <h1 className="text-2xl font-bold text-gray-900">Mis medidas</h1>
+          <Link href="/profile" className="text-sm text-gray-500 hover:text-gray-900 hover:underline">← Perfil</Link>
         </div>
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-gray-600 mb-6">
           Tus medidas se guardarán en tu perfil y se usarán automáticamente en cada solicitud de confección.
         </p>
         <MeasurementsForm initial={measurement} onSave={handleSave} />

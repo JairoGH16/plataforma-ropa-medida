@@ -1,10 +1,10 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -20,18 +20,18 @@ model User {
 }
 
 model Measurement {
-  id            String   @id @default(cuid())
-  userId        String   @unique
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  talla         String?
-  cuello        Float?
-  pecho         Float?
-  cintura       Float?
-  cadera        Float?
-  largoManga    Float?
-  largoPierna   Float?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  talla       String?
+  cuello      Float?
+  pecho       Float?
+  cintura     Float?
+  cadera      Float?
+  largoManga  Float?
+  largoPierna Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum Role {

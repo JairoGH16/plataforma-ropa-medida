@@ -8,6 +8,9 @@ interface Props {
   onSuccess: (data: AuthResponse) => void;
 }
 
+const inputClass = 'w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-black';
+const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
+
 export function RegisterForm({ onSuccess }: Props) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,7 +25,7 @@ export function RegisterForm({ onSuccess }: Props) {
         name: form.get('name') as string,
         email: form.get('email') as string,
         password: form.get('password') as string,
-        phone: form.get('phone') as string || undefined,
+        phone: (form.get('phone') as string) || undefined,
       });
       onSuccess(data);
     } catch (err) {
@@ -35,20 +38,20 @@ export function RegisterForm({ onSuccess }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label className="block text-sm font-medium mb-1">Nombre completo</label>
-        <input name="name" type="text" required className="w-full border rounded px-3 py-2" />
+        <label className={labelClass}>Nombre completo</label>
+        <input name="name" type="text" required className={inputClass} />
       </div>
       <div>
-        <label className="block text-sm font-medium mb-1">Correo electrónico</label>
-        <input name="email" type="email" required className="w-full border rounded px-3 py-2" />
+        <label className={labelClass}>Correo electrónico</label>
+        <input name="email" type="email" required className={inputClass} />
       </div>
       <div>
-        <label className="block text-sm font-medium mb-1">Contraseña</label>
-        <input name="password" type="password" required minLength={6} className="w-full border rounded px-3 py-2" />
+        <label className={labelClass}>Contraseña</label>
+        <input name="password" type="password" required minLength={6} className={inputClass} />
       </div>
       <div>
-        <label className="block text-sm font-medium mb-1">Teléfono (opcional)</label>
-        <input name="phone" type="tel" className="w-full border rounded px-3 py-2" />
+        <label className={labelClass}>Teléfono (opcional)</label>
+        <input name="phone" type="tel" className={inputClass} />
       </div>
       {error && <p className="text-red-600 text-sm">{error}</p>}
       <button type="submit" disabled={loading} className="bg-black text-white py-2 rounded hover:bg-gray-800 disabled:opacity-50">

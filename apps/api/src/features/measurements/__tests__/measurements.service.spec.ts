@@ -2,9 +2,7 @@ import { Test } from '@nestjs/testing';
 import { MeasurementsService } from '../measurements.service';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 
-jest.mock('../../../shared/prisma/prisma.service', () => ({
-  PrismaService: class {},
-}));
+jest.mock('../../../shared/prisma/prisma.service');
 
 const mockMeasurement = {
   id: 'm-1',

@@ -8,6 +8,9 @@ interface Props {
   onSuccess: (data: AuthResponse) => void;
 }
 
+const inputClass = 'w-full border border-gray-300 rounded px-3 py-2 text-gray-900 focus:outline-none focus:ring-2 focus:ring-black';
+const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
+
 export function LoginForm({ onSuccess }: Props) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -33,12 +36,12 @@ export function LoginForm({ onSuccess }: Props) {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div>
-        <label className="block text-sm font-medium mb-1">Correo electrónico</label>
-        <input name="email" type="email" required className="w-full border rounded px-3 py-2" />
+        <label className={labelClass}>Correo electrónico</label>
+        <input name="email" type="email" required className={inputClass} />
       </div>
       <div>
-        <label className="block text-sm font-medium mb-1">Contraseña</label>
-        <input name="password" type="password" required className="w-full border rounded px-3 py-2" />
+        <label className={labelClass}>Contraseña</label>
+        <input name="password" type="password" required className={inputClass} />
       </div>
       {error && <p className="text-red-600 text-sm">{error}</p>}
       <button type="submit" disabled={loading} className="bg-black text-white py-2 rounded hover:bg-gray-800 disabled:opacity-50">
