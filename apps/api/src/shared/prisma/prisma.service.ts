@@ -5,7 +5,9 @@ import { PrismaClient } from '@prisma/client';
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
     super({
-      datasourceUrl: process.env.DATABASE_URL ?? 'file:./dev.db',
+      datasources: {
+        db: { url: process.env.DATABASE_URL ?? 'file:./dev.db' },
+      },
     });
   }
 
