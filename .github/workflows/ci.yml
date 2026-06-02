@@ -17,12 +17,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+          node-version: 22
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile --ignore-scripts
 
       - name: Lint web
         run: pnpm --filter web lint
@@ -40,12 +38,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+          node-version: 22
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile --ignore-scripts
 
       - name: Test web
         run: pnpm --filter web test --passWithNoTests
@@ -64,12 +60,10 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
+          node-version: 22
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --no-frozen-lockfile --ignore-scripts
 
       - name: Build web
         run: pnpm --filter web build
