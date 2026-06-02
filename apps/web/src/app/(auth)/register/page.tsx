@@ -21,7 +21,7 @@ export default function RegisterPage() {
         />
         <p className="mt-4 text-sm text-center text-gray-600">
           ¿Ya tienes cuenta?{' '}
-          <Link href="/login" className="underline font-medium">
+          <Link href="/login" className="underline font-medium text-gray-900">
             Inicia sesión
           </Link>
         </p>
