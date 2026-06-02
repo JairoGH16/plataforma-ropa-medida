@@ -20,7 +20,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Lint web
         run: pnpm --filter web lint
@@ -41,7 +41,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Test web
         run: pnpm --filter web test --passWithNoTests
@@ -63,7 +63,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies
-        run: pnpm install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: Build web
         run: pnpm --filter web build
