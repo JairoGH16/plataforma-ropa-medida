@@ -1,55 +1,62 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { Navbar } from '@/components/Navbar';
 
-const NAV_ITEMS = [
-  { href: '/catalog', label: 'Catálogo de fabricantes', description: 'Explora los fabricantes disponibles' },
-  { href: '/measurements', label: 'Mis medidas', description: 'Administra tus medidas corporales' },
-  { href: '/profile', label: 'Mi perfil', description: 'Actualiza tu información personal' },
+const CLIENT_ITEMS = [
+  { href: '/catalog', label: 'Catálogo de fabricantes', description: 'Explora los fabricantes disponibles en la plataforma', icon: '🧵' },
+  { href: '/measurements', label: 'Mis medidas', description: 'Administra tus medidas corporales', icon: '📏' },
+  { href: '/profile', label: 'Mi perfil', description: 'Actualiza tu información personal', icon: '👤' },
+];
+
+const MANUFACTURER_ITEMS = [
+  { href: '/manufacturer', label: 'Mi perfil de fabricante', description: 'Gestiona tu especialidad y tipos de prenda', icon: '🧵' },
+  { href: '/catalog', label: 'Catálogo', description: 'Explora otros fabricantes en la plataforma', icon: '📋' },
+  { href: '/profile', label: 'Mi cuenta', description: 'Actualiza tu información personal', icon: '👤' },
 ];
 
 export default function Home() {
   const router = useRouter();
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (!isAuthenticated) router.replace('/login');
+    Promise.resolve()
+      .then(() => { if (!isAuthenticated) router.replace('/login'); })
+      .finally(() => setReady(true));
   }, [isAuthenticated, router]);
 
-  if (!isAuthenticated) return null;
+  if (!ready || !isAuthenticated) return null;
+
+  const navItems = user?.role === 'MANUFACTURER' ? MANUFACTURER_ITEMS : CLIENT_ITEMS;
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-10">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Bienvenido, {user?.name}</h1>
-            <p className="text-sm text-gray-500 mt-1">{user?.email}</p>
-          </div>
-          <button
-            onClick={() => { logout(); router.push('/login'); }}
-            className="text-sm text-gray-500 hover:text-gray-900 hover:underline"
-          >
-            Cerrar sesión
-          </button>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <main className="max-w-3xl mx-auto px-4 py-12">
+        <div className="mb-10">
+          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">
+            {user?.role === 'MANUFACTURER' ? 'Fabricante' : 'Cliente'}
+          </p>
+          <h1 className="text-2xl font-semibold text-gray-900">Bienvenido, {user?.name}</h1>
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {NAV_ITEMS.map(({ href, label, description }) => (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {navItems.map(({ href, label, description, icon }) => (
             <Link
               key={href}
               href={href}
-              className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 hover:shadow-md hover:border-gray-300 transition-all"
+              className="bg-white rounded-xl border border-gray-200 p-6 hover:border-gray-400 hover:shadow-sm transition-all group"
             >
-              <h2 className="text-base font-semibold text-gray-900 mb-1">{label}</h2>
-              <p className="text-sm text-gray-500">{description}</p>
+              <div className="text-2xl mb-3">{icon}</div>
+              <h2 className="text-sm font-semibold text-gray-900 mb-1 group-hover:underline">{label}</h2>
+              <p className="text-xs text-gray-400 leading-relaxed">{description}</p>
             </Link>
           ))}
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { Navbar } from '@/components/Navbar';
 import { ManufacturerCard } from '@/features/manufacturers/components/ManufacturerCard';
 import { getManufacturers } from '@/features/manufacturers/services/manufacturers.service';
 import { Manufacturer } from '@/features/manufacturers/types/manufacturer.types';
@@ -19,28 +19,31 @@ export default function CatalogPage() {
   }, []);
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-10">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Catálogo de fabricantes</h1>
-            <p className="text-sm text-gray-500 mt-1">Encuentra el fabricante ideal para tu prenda</p>
-          </div>
-          <Link href="/profile" className="text-sm text-gray-500 hover:text-gray-900 hover:underline">
-            ← Perfil
-          </Link>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <main className="max-w-5xl mx-auto px-4 py-12">
+        <div className="mb-10">
+          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Directorio</p>
+          <h1 className="text-2xl font-semibold text-gray-900">Catálogo de fabricantes</h1>
+          <p className="text-sm text-gray-400 mt-1">Encuentra el fabricante ideal para tu prenda</p>
         </div>
 
         {loading && (
-          <p className="text-gray-600 text-center py-20">Cargando fabricantes...</p>
+          <div className="flex items-center justify-center py-24">
+            <p className="text-sm text-gray-400">Cargando fabricantes...</p>
+          </div>
         )}
 
         {error && (
-          <p className="text-red-600 text-center py-20">{error}</p>
+          <div className="flex items-center justify-center py-24">
+            <p className="text-sm text-red-500">{error}</p>
+          </div>
         )}
 
         {!loading && !error && manufacturers.length === 0 && (
-          <p className="text-gray-500 text-center py-20">No hay fabricantes registrados aún.</p>
+          <div className="flex flex-col items-center justify-center py-24 gap-2">
+            <p className="text-sm text-gray-400">No hay fabricantes registrados aún.</p>
+          </div>
         )}
 
         {!loading && !error && manufacturers.length > 0 && (
@@ -50,7 +53,7 @@ export default function CatalogPage() {
             ))}
           </div>
         )}
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }

@@ -8,15 +8,29 @@ datasource db {
 }
 
 model User {
-  id          String       @id @default(cuid())
-  email       String       @unique
-  name        String
-  password    String
-  role        Role         @default(CLIENT)
-  phone       String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  measurement Measurement?
+  id                  String              @id @default(cuid())
+  email               String              @unique
+  name                String
+  password            String
+  role                Role                @default(CLIENT)
+  phone               String?
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  measurement         Measurement?
+  manufacturerProfile ManufacturerProfile?
+}
+
+model ManufacturerProfile {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialty    String?
+  garmentTypes String?
+  description  String?
+  location     String?
+  experience   Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Measurement {
