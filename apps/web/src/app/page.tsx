@@ -20,15 +20,15 @@ const MANUFACTURER_ITEMS = [
 export default function Home() {
   const router = useRouter();
   const { isAuthenticated, user, logout } = useAuth();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => { setMounted(true); }, []);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (mounted && !isAuthenticated) router.replace('/login');
-  }, [mounted, isAuthenticated, router]);
+    Promise.resolve()
+      .then(() => { if (!isAuthenticated) router.replace('/login'); })
+      .finally(() => setReady(true));
+  }, [isAuthenticated, router]);
 
-  if (!mounted || !isAuthenticated) return null;
+  if (!ready || !isAuthenticated) return null;
 
   const navItems = user?.role === 'MANUFACTURER' ? MANUFACTURER_ITEMS : CLIENT_ITEMS;
 

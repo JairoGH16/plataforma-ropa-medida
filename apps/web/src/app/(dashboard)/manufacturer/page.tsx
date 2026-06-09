@@ -11,21 +11,17 @@ import { ManufacturerProfile, UpsertProfileDto } from '@/features/manufacturers/
 export default function ManufacturerProfilePage() {
   const router = useRouter();
   const { token, user } = useAuth();
-  const [mounted, setMounted] = useState(false);
   const [profile, setProfile] = useState<ManufacturerProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { setMounted(true); }, []);
-
   useEffect(() => {
-    if (!mounted) return;
     if (!token) { router.push('/login'); return; }
     if (user?.role !== 'MANUFACTURER') { router.push('/'); return; }
     getMyManufacturerProfile(token)
       .then(setProfile)
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [mounted, token, user, router]);
+  }, [token, user, router]);
 
   async function handleSave(dto: UpsertProfileDto) {
     if (!token) return;
@@ -33,7 +29,7 @@ export default function ManufacturerProfilePage() {
     setProfile(updated);
   }
 
-  if (!mounted || loading) return (
+  if (loading) return (
     <main className="min-h-screen flex items-center justify-center">
       <p className="text-gray-700">Cargando...</p>
     </main>
