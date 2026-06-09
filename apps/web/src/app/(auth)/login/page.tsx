@@ -16,7 +16,7 @@ export default function LoginPage() {
         <LoginForm
           onSuccess={({ token, user }) => {
             saveSession(token, user);
-            router.push('/profile');
+            router.push('/');
           }}
         />
         <p className="mt-4 text-sm text-center text-gray-600">
