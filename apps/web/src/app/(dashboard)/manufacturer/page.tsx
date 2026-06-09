@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { ManufacturerProfileForm } from '@/features/manufacturers/components/ManufacturerProfileForm';
 import { getMyManufacturerProfile, saveMyManufacturerProfile } from '@/features/manufacturers/services/manufacturers.service';
 import { ManufacturerProfile, UpsertProfileDto } from '@/features/manufacturers/types/manufacturer.types';
+import { Navbar } from '@/components/Navbar';
 
 export default function ManufacturerProfilePage() {
   const router = useRouter();
@@ -30,23 +30,27 @@ export default function ManufacturerProfilePage() {
   }
 
   if (loading) return (
-    <main className="min-h-screen flex items-center justify-center">
-      <p className="text-gray-700">Cargando...</p>
-    </main>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <div className="flex items-center justify-center py-24">
+        <p className="text-sm text-gray-400">Cargando...</p>
+      </div>
+    </div>
   );
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-10">
-      <div className="max-w-lg mx-auto bg-white rounded-xl shadow p-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">Mi perfil de fabricante</h1>
-          <Link href="/" className="text-sm text-gray-500 hover:text-gray-900 hover:underline">← Inicio</Link>
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <main className="max-w-lg mx-auto px-4 py-12">
+        <div className="mb-8">
+          <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Fabricante</p>
+          <h1 className="text-2xl font-semibold text-gray-900">Mi perfil</h1>
+          <p className="text-sm text-gray-400 mt-1">Visible para los clientes en el catálogo.</p>
         </div>
-        <p className="text-sm text-gray-600 mb-6">
-          Esta información será visible para los clientes en el catálogo de fabricantes.
-        </p>
-        <ManufacturerProfileForm initial={profile} onSave={handleSave} />
-      </div>
-    </main>
+        <div className="bg-white rounded-2xl border border-gray-200 p-8">
+          <ManufacturerProfileForm initial={profile} onSave={handleSave} />
+        </div>
+      </main>
+    </div>
   );
 }
