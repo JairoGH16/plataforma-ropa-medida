@@ -1,23 +1,41 @@
 import { Test } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, ForbiddenException } from '@nestjs/common';
 import { ManufacturersService } from '../manufacturers.service';
 import { PrismaService } from '../../../shared/prisma/prisma.service';
 
 jest.mock('../../../shared/prisma/prisma.service');
 
+const mockProfile = {
+  id: 'p-1',
+  userId: 'm-1',
+  specialty: 'Sastrería formal',
+  garmentTypes: 'Trajes, Camisas',
+  description: 'Expertos en ropa formal.',
+  location: 'San José',
+  experience: 20,
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
 const mockManufacturer = {
   id: 'm-1',
   name: 'Sastrería García',
   email: 'garcia@example.com',
-  phone: '8888-0000',
+  phone: '8888-0001',
   createdAt: new Date(),
   updatedAt: new Date(),
+  manufacturerProfile: mockProfile,
 };
 
 const mockPrisma = {
   user: {
     findMany: jest.fn(),
     findFirst: jest.fn(),
+    findUnique: jest.fn(),
+  },
+  manufacturerProfile: {
+    findUnique: jest.fn(),
+    upsert: jest.fn(),
   },
 };
 
@@ -37,14 +55,11 @@ describe('ManufacturersService', () => {
   });
 
   describe('findAll', () => {
-    it('returns list of manufacturers', async () => {
+    it('returns list of manufacturers with profiles', async () => {
       mockPrisma.user.findMany.mockResolvedValue([mockManufacturer]);
       const result = await service.findAll();
       expect(result).toHaveLength(1);
-      expect(result[0].name).toBe('Sastrería García');
-      expect(mockPrisma.user.findMany).toHaveBeenCalledWith(
-        expect.objectContaining({ where: { role: 'MANUFACTURER' } }),
-      );
+      expect(result[0].manufacturerProfile?.specialty).toBe('Sastrería formal');
     });
 
     it('returns empty array when no manufacturers exist', async () => {
@@ -55,16 +70,51 @@ describe('ManufacturersService', () => {
   });
 
   describe('findById', () => {
-    it('returns a manufacturer by id', async () => {
+    it('returns a manufacturer with profile by id', async () => {
       mockPrisma.user.findFirst.mockResolvedValue(mockManufacturer);
       const result = await service.findById('m-1');
       expect(result.name).toBe('Sastrería García');
+      expect(result.manufacturerProfile?.location).toBe('San José');
     });
 
     it('throws NotFoundException when manufacturer not found', async () => {
       mockPrisma.user.findFirst.mockResolvedValue(null);
       await expect(service.findById('unknown')).rejects.toThrow(
         NotFoundException,
+      );
+    });
+  });
+
+  describe('getMyProfile', () => {
+    it('returns profile for a manufacturer', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({ role: 'MANUFACTURER' });
+      mockPrisma.manufacturerProfile.findUnique.mockResolvedValue(mockProfile);
+      const result = await service.getMyProfile('m-1');
+      expect(result?.specialty).toBe('Sastrería formal');
+    });
+
+    it('throws ForbiddenException for non-manufacturer', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({ role: 'CLIENT' });
+      await expect(service.getMyProfile('c-1')).rejects.toThrow(
+        ForbiddenException,
+      );
+    });
+  });
+
+  describe('upsertMyProfile', () => {
+    it('saves and returns the profile', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({ role: 'MANUFACTURER' });
+      mockPrisma.manufacturerProfile.upsert.mockResolvedValue(mockProfile);
+      const result = await service.upsertMyProfile('m-1', {
+        specialty: 'Sastrería formal',
+      });
+      expect(result.specialty).toBe('Sastrería formal');
+    });
+
+    it('throws ForbiddenException for non-manufacturer', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({ role: 'CLIENT' });
+      await expect(service.upsertMyProfile('c-1', {})).rejects.toThrow(
+        ForbiddenException,
       );
     });
   });

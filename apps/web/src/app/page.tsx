@@ -5,10 +5,16 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
-const NAV_ITEMS = [
+const CLIENT_ITEMS = [
   { href: '/catalog', label: 'Catálogo de fabricantes', description: 'Explora los fabricantes disponibles' },
   { href: '/measurements', label: 'Mis medidas', description: 'Administra tus medidas corporales' },
   { href: '/profile', label: 'Mi perfil', description: 'Actualiza tu información personal' },
+];
+
+const MANUFACTURER_ITEMS = [
+  { href: '/manufacturer', label: 'Mi perfil de fabricante', description: 'Gestiona tu especialidad y tipos de prenda' },
+  { href: '/catalog', label: 'Catálogo de fabricantes', description: 'Explora otros fabricantes' },
+  { href: '/profile', label: 'Mi cuenta', description: 'Actualiza tu información personal' },
 ];
 
 export default function Home() {
@@ -20,6 +26,8 @@ export default function Home() {
   }, [isAuthenticated, router]);
 
   if (!isAuthenticated) return null;
+
+  const navItems = user?.role === 'MANUFACTURER' ? MANUFACTURER_ITEMS : CLIENT_ITEMS;
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-10">
@@ -38,7 +46,7 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {NAV_ITEMS.map(({ href, label, description }) => (
+          {navItems.map(({ href, label, description }) => (
             <Link
               key={href}
               href={href}
