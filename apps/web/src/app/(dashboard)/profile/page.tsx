@@ -13,13 +13,16 @@ const labelClass = 'block text-sm font-medium text-gray-700 mb-1';
 export default function ProfilePage() {
   const router = useRouter();
   const { user, token, saveSession, logout } = useAuth();
+  const [mounted, setMounted] = useState(false);
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => { setMounted(true); }, []);
+
   useEffect(() => {
-    if (!token) router.push('/login');
-  }, [token, router]);
+    if (mounted && !token) router.push('/login');
+  }, [mounted, token, router]);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -42,7 +45,7 @@ export default function ProfilePage() {
     }
   }
 
-  if (!user) return null;
+  if (!mounted || !user) return null;
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-10">
