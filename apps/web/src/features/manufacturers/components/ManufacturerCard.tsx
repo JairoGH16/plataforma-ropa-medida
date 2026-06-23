@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Manufacturer } from '../types/manufacturer.types';
 
 interface Props {
@@ -8,7 +9,10 @@ export function ManufacturerCard({ manufacturer }: Props) {
   const profile = manufacturer.manufacturerProfile;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col gap-4 hover:border-gray-400 hover:shadow-sm transition-all">
+    <Link
+      href={`/catalog/${manufacturer.id}`}
+      className="bg-white rounded-xl border border-gray-200 p-6 flex flex-col gap-4 hover:border-gray-400 hover:shadow-sm transition-all"
+    >
       <div>
         <div className="flex items-start justify-between gap-2 mb-1">
           <h2 className="text-sm font-semibold text-gray-900">{manufacturer.name}</h2>
@@ -44,6 +48,6 @@ export function ManufacturerCard({ manufacturer }: Props) {
         )}
         <span className="text-xs text-gray-400">{manufacturer.email}</span>
       </div>
-    </div>
+    </Link>
   );
 }
