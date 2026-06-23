@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 
@@ -20,8 +21,13 @@ export function Navbar() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const [ready, setReady] = useState(false);
 
-  const navItems = user?.role === 'MANUFACTURER' ? MANUFACTURER_NAV : CLIENT_NAV;
+  useEffect(() => {
+    Promise.resolve().finally(() => setReady(true));
+  }, []);
+
+  const navItems = ready && user?.role === 'MANUFACTURER' ? MANUFACTURER_NAV : CLIENT_NAV;
 
   return (
     <nav className="bg-white border-b border-gray-200">
@@ -47,7 +53,7 @@ export function Navbar() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <span className="text-xs text-gray-400 hidden sm:block truncate max-w-36">{user?.name}</span>
+          <span className="text-xs text-gray-400 hidden sm:block truncate max-w-36">{ready ? user?.name : ''}</span>
           <button
             onClick={() => { logout(); router.push('/login'); }}
             className="text-xs text-gray-400 hover:text-gray-900 transition-colors border border-gray-200 rounded px-3 py-1.5 hover:border-gray-400"
