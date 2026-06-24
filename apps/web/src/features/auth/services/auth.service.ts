@@ -8,7 +8,10 @@ export async function register(data: { email: string; name: string; password: st
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error((await res.json()).message ?? 'Registration failed');
+  if (!res.ok) {
+    const msg = await res.json().then((d) => d.message).catch(() => 'Registration failed');
+    throw new Error(msg);
+  }
   return res.json();
 }
 
@@ -18,7 +21,10 @@ export async function login(data: { email: string; password: string }): Promise<
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
   });
-  if (!res.ok) throw new Error((await res.json()).message ?? 'Login failed');
+  if (!res.ok) {
+    const msg = await res.json().then((d) => d.message).catch(() => 'Login failed');
+    throw new Error(msg);
+  }
   return res.json();
 }
 
