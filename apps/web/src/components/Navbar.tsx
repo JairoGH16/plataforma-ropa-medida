@@ -8,12 +8,14 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 const CLIENT_NAV = [
   { href: '/catalog', label: 'Catálogo' },
   { href: '/suggestions', label: 'Sugerencias' },
-  { href: '/measurements', label: 'Mis medidas' },
+  { href: '/quotes', label: 'Solicitudes' },
+  { href: '/measurements', label: 'Medidas' },
   { href: '/profile', label: 'Perfil' },
 ];
 
 const MANUFACTURER_NAV = [
   { href: '/catalog', label: 'Catálogo' },
+  { href: '/quotes', label: 'Solicitudes' },
   { href: '/manufacturer', label: 'Mi perfil' },
   { href: '/profile', label: 'Cuenta' },
 ];

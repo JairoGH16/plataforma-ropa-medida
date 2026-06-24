@@ -6,13 +6,19 @@ import Link from 'next/link';
 import { Navbar } from '@/components/Navbar';
 import { getManufacturerById } from '@/features/manufacturers/services/manufacturers.service';
 import { Manufacturer } from '@/features/manufacturers/types/manufacturer.types';
+import { QuoteRequestForm } from '@/features/quotes/components/QuoteRequestForm';
+import { createQuote } from '@/features/quotes/services/quotes.service';
+import { useAuth } from '@/features/auth/hooks/useAuth';
 
 export default function ManufacturerDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const { user, token } = useAuth();
   const [manufacturer, setManufacturer] = useState<Manufacturer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showForm, setShowForm] = useState(false);
+  const [sent, setSent] = useState(false);
 
   useEffect(() => {
     getManufacturerById(id)
@@ -50,7 +56,44 @@ export default function ManufacturerDetailPage() {
           </div>
         )}
 
-        {!loading && manufacturer && <ManufacturerDetail manufacturer={manufacturer} />}
+        {!loading && manufacturer && (
+          <>
+            <ManufacturerDetail manufacturer={manufacturer} />
+
+            {user?.role === 'CLIENT' && token && !sent && (
+              <>
+                {!showForm ? (
+                  <button
+                    onClick={() => setShowForm(true)}
+                    className="mt-6 w-full bg-gray-900 text-white text-sm py-3 rounded-xl hover:bg-gray-700 transition-colors"
+                  >
+                    Solicitar cotización
+                  </button>
+                ) : (
+                  <QuoteRequestForm
+                    manufacturerId={id}
+                    manufacturerName={manufacturer.name}
+                    token={token}
+                    onSubmit={async (dto) => {
+                      await createQuote(token, { ...dto, manufacturerId: id });
+                    }}
+                    onSent={() => { setShowForm(false); setSent(true); }}
+                    onCancel={() => setShowForm(false)}
+                  />
+                )}
+              </>
+            )}
+
+            {sent && (
+              <div className="mt-6 bg-green-50 border border-green-200 rounded-xl p-4 text-center">
+                <p className="text-sm text-green-700 font-medium">Solicitud enviada correctamente.</p>
+                <Link href="/quotes" className="text-xs text-green-600 hover:underline mt-1 inline-block">
+                  Ver mis solicitudes →
+                </Link>
+              </div>
+            )}
+          </>
+        )}
       </main>
     </div>
   );
@@ -89,10 +132,7 @@ function ManufacturerDetail({ manufacturer }: { manufacturer: Manufacturer }) {
           <p className="text-xs text-gray-400 uppercase tracking-widest mb-3">Tipos de prenda</p>
           <div className="flex flex-wrap gap-2">
             {profile.garmentTypes.split(',').map((t) => (
-              <span
-                key={t.trim()}
-                className="text-xs bg-gray-100 text-gray-700 rounded-full px-3 py-1"
-              >
+              <span key={t.trim()} className="text-xs bg-gray-100 text-gray-700 rounded-full px-3 py-1">
                 {t.trim()}
               </span>
             ))}

@@ -1,4 +1,12 @@
-import { Controller, Get, Patch, Param, Body, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Patch,
+  Param,
+  Body,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ManufacturersService } from './manufacturers.service';
 import { UpsertProfileDto } from './dto/upsert-profile.dto';
 import { JwtGuard } from '../../shared/guards/jwt.guard';
