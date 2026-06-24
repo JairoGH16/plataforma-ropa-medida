@@ -9,12 +9,15 @@ import { Manufacturer } from '@/features/manufacturers/types/manufacturer.types'
 import { QuoteRequestForm } from '@/features/quotes/components/QuoteRequestForm';
 import { createQuote } from '@/features/quotes/services/quotes.service';
 import { useAuth } from '@/features/auth/hooks/useAuth';
+import { getMyMeasurements } from '@/features/measurements/services/measurements.service';
+import { Measurement } from '@/features/measurements/types/measurement.types';
 
 export default function ManufacturerDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const { user, token } = useAuth();
   const [manufacturer, setManufacturer] = useState<Manufacturer | null>(null);
+  const [measurement, setMeasurement] = useState<Measurement | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
@@ -26,6 +29,12 @@ export default function ManufacturerDetailPage() {
       .catch(() => setError('No se encontró el fabricante.'))
       .finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => {
+    if (token && user?.role === 'CLIENT') {
+      getMyMeasurements(token).then(setMeasurement).catch(() => null);
+    }
+  }, [token, user?.role]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -73,6 +82,7 @@ export default function ManufacturerDetailPage() {
                   <QuoteRequestForm
                     manufacturerId={id}
                     manufacturerName={manufacturer.name}
+                    measurement={measurement}
                     token={token}
                     onSubmit={async (dto) => {
                       await createQuote(token, { ...dto, manufacturerId: id });
