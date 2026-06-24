@@ -1,4 +1,4 @@
-import { Controller, Get, Patch, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Patch, Param, Body, Query, UseGuards } from '@nestjs/common';
 import { ManufacturersService } from './manufacturers.service';
 import { UpsertProfileDto } from './dto/upsert-profile.dto';
 import { JwtGuard } from '../../shared/guards/jwt.guard';
@@ -11,6 +11,11 @@ export class ManufacturersController {
   @Get()
   findAll() {
     return this.manufacturers.findAll();
+  }
+
+  @Get('suggestions')
+  getSuggestions(@Query('garmentType') garmentType: string) {
+    return this.manufacturers.getSuggestions(garmentType ?? '');
   }
 
   @Get('me/profile')
