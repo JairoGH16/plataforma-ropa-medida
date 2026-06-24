@@ -9,13 +9,15 @@ import { Navbar } from '@/components/Navbar';
 const CLIENT_ITEMS = [
   { href: '/catalog', label: 'Catálogo de fabricantes', description: 'Explora los fabricantes disponibles en la plataforma', icon: '🧵' },
   { href: '/suggestions', label: 'Sugerencias', description: 'Recibe recomendaciones según el tipo de prenda que necesitas', icon: '✨' },
+  { href: '/quotes', label: 'Mis solicitudes', description: 'Revisa el estado de tus solicitudes de cotización', icon: '📋' },
   { href: '/measurements', label: 'Mis medidas', description: 'Administra tus medidas corporales', icon: '📏' },
   { href: '/profile', label: 'Mi perfil', description: 'Actualiza tu información personal', icon: '👤' },
 ];
 
 const MANUFACTURER_ITEMS = [
   { href: '/manufacturer', label: 'Mi perfil de fabricante', description: 'Gestiona tu especialidad y tipos de prenda', icon: '🧵' },
-  { href: '/catalog', label: 'Catálogo', description: 'Explora otros fabricantes en la plataforma', icon: '📋' },
+  { href: '/quotes', label: 'Solicitudes recibidas', description: 'Revisa y gestiona las solicitudes de cotización de clientes', icon: '📋' },
+  { href: '/catalog', label: 'Catálogo', description: 'Explora otros fabricantes en la plataforma', icon: '🗂️' },
   { href: '/profile', label: 'Mi cuenta', description: 'Actualiza tu información personal', icon: '👤' },
 ];
 
