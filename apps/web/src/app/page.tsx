@@ -8,6 +8,7 @@ import { Navbar } from '@/components/Navbar';
 
 const CLIENT_ITEMS = [
   { href: '/catalog', label: 'Catálogo de fabricantes', description: 'Explora los fabricantes disponibles en la plataforma', icon: '🧵' },
+  { href: '/suggestions', label: 'Sugerencias', description: 'Recibe recomendaciones según el tipo de prenda que necesitas', icon: '✨' },
   { href: '/measurements', label: 'Mis medidas', description: 'Administra tus medidas corporales', icon: '📏' },
   { href: '/profile', label: 'Mi perfil', description: 'Actualiza tu información personal', icon: '👤' },
 ];

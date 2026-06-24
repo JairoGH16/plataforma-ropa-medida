@@ -14,6 +14,14 @@ export async function getManufacturerById(id: string): Promise<Manufacturer> {
   return res.json() as Promise<Manufacturer>;
 }
 
+export async function getManufacturerSuggestions(garmentType: string): Promise<Manufacturer[]> {
+  const res = await fetch(
+    `${API}/manufacturers/suggestions?garmentType=${encodeURIComponent(garmentType)}`,
+  );
+  if (!res.ok) throw new Error('Failed to fetch suggestions');
+  return res.json() as Promise<Manufacturer[]>;
+}
+
 export async function getMyManufacturerProfile(token: string): Promise<ManufacturerProfile | null> {
   const res = await fetch(`${API}/manufacturers/me/profile`, {
     headers: { Authorization: `Bearer ${token}` },

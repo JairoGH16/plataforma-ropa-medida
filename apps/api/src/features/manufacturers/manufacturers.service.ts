@@ -50,6 +50,40 @@ export class ManufacturersService {
     return this.prisma.manufacturerProfile.findUnique({ where: { userId } });
   }
 
+  async getSuggestions(garmentType: string) {
+    const all = await this.prisma.user.findMany({
+      where: { role: 'MANUFACTURER' },
+      select: WITH_PROFILE,
+    });
+
+    const query = garmentType.toLowerCase().trim();
+
+    const scored = all
+      .filter((m) => m.manufacturerProfile)
+      .map((m) => {
+        const profile = m.manufacturerProfile!;
+        const types = (profile.garmentTypes ?? '')
+          .split(',')
+          .map((t) => t.trim().toLowerCase());
+        const exactMatch = types.includes(query);
+        const partialMatch =
+          !exactMatch && types.some((t) => t.includes(query));
+        const matchScore = exactMatch ? 100 : partialMatch ? 50 : 0;
+        const score = matchScore + (profile.experience ?? 0);
+        return { ...m, score, matchScore };
+      })
+      .filter((m) => m.matchScore > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((m) => {
+        const { score, matchScore, ...rest } = m;
+        void score;
+        void matchScore;
+        return rest;
+      });
+
+    return scored;
+  }
+
   async upsertMyProfile(userId: string, dto: UpsertProfileDto) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },

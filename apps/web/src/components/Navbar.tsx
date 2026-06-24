@@ -7,6 +7,7 @@ import { useAuth } from '@/features/auth/hooks/useAuth';
 
 const CLIENT_NAV = [
   { href: '/catalog', label: 'Catálogo' },
+  { href: '/suggestions', label: 'Sugerencias' },
   { href: '/measurements', label: 'Mis medidas' },
   { href: '/profile', label: 'Perfil' },
 ];

@@ -101,6 +101,54 @@ describe('ManufacturersService', () => {
     });
   });
 
+  describe('getSuggestions', () => {
+    const manufacturers = [
+      {
+        ...mockManufacturer,
+        id: 'm-1',
+        manufacturerProfile: { ...mockProfile, garmentTypes: 'Trajes, Camisas', experience: 20 },
+      },
+      {
+        ...mockManufacturer,
+        id: 'm-2',
+        name: 'Confecciones Mora',
+        manufacturerProfile: { ...mockProfile, garmentTypes: 'Pantalones, Camisas', experience: 5 },
+      },
+      {
+        ...mockManufacturer,
+        id: 'm-3',
+        name: 'Taller Vargas',
+        manufacturerProfile: { ...mockProfile, garmentTypes: 'Uniformes', experience: 3 },
+      },
+    ];
+
+    it('returns only manufacturers matching the garment type', async () => {
+      mockPrisma.user.findMany.mockResolvedValue(manufacturers);
+      const result = await service.getSuggestions('Camisas');
+      expect(result).toHaveLength(2);
+      expect(result.every((m) => ['m-1', 'm-2'].includes(m.id))).toBe(true);
+    });
+
+    it('orders results by score descending (experience as tiebreaker)', async () => {
+      mockPrisma.user.findMany.mockResolvedValue(manufacturers);
+      const result = await service.getSuggestions('Camisas');
+      expect(result[0].id).toBe('m-1');
+    });
+
+    it('returns empty array when no manufacturer matches', async () => {
+      mockPrisma.user.findMany.mockResolvedValue(manufacturers);
+      const result = await service.getSuggestions('Vestidos');
+      expect(result).toHaveLength(0);
+    });
+
+    it('excludes manufacturers without profile', async () => {
+      const withoutProfile = { ...mockManufacturer, id: 'm-4', manufacturerProfile: null };
+      mockPrisma.user.findMany.mockResolvedValue([...manufacturers, withoutProfile]);
+      const result = await service.getSuggestions('Camisas');
+      expect(result.every((m) => m.id !== 'm-4')).toBe(true);
+    });
+  });
+
   describe('upsertMyProfile', () => {
     it('saves and returns the profile', async () => {
       mockPrisma.user.findUnique.mockResolvedValue({ role: 'MANUFACTURER' });
