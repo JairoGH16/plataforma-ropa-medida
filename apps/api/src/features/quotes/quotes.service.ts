@@ -7,7 +7,25 @@ import { PrismaService } from '../../shared/prisma/prisma.service';
 import { CreateQuoteDto } from './dto/create-quote.dto';
 
 const CLIENT_INCLUDE = {
-  client: { select: { id: true, name: true, email: true, phone: true } },
+  client: {
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      phone: true,
+      measurement: {
+        select: {
+          talla: true,
+          cuello: true,
+          pecho: true,
+          cintura: true,
+          cadera: true,
+          largoManga: true,
+          largoPierna: true,
+        },
+      },
+    },
+  },
   manufacturer: { select: { id: true, name: true, email: true } },
 };
 

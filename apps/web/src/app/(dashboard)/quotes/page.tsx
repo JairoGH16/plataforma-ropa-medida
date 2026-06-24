@@ -6,10 +6,38 @@ import { Navbar } from '@/components/Navbar';
 import { useAuth } from '@/features/auth/hooks/useAuth';
 import { getMyQuotes, getReceivedQuotes, updateQuoteStatus } from '@/features/quotes/services/quotes.service';
 import { QuoteStatusBadge } from '@/features/quotes/components/QuoteStatusBadge';
-import { QuoteRequest, QuoteStatus } from '@/features/quotes/types/quote.types';
+import { QuoteMeasurement, QuoteRequest, QuoteStatus } from '@/features/quotes/types/quote.types';
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString('es-CR', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+const MEASURE_FIELDS: { key: keyof QuoteMeasurement; label: string; unit?: string }[] = [
+  { key: 'talla', label: 'Talla' },
+  { key: 'cuello', label: 'Cuello', unit: 'cm' },
+  { key: 'pecho', label: 'Pecho', unit: 'cm' },
+  { key: 'cintura', label: 'Cintura', unit: 'cm' },
+  { key: 'cadera', label: 'Cadera', unit: 'cm' },
+  { key: 'largoManga', label: 'Largo manga', unit: 'cm' },
+  { key: 'largoPierna', label: 'Largo pierna', unit: 'cm' },
+];
+
+function MeasurementSummary({ measurement }: { measurement: QuoteMeasurement }) {
+  const filled = MEASURE_FIELDS.filter(({ key }) => measurement[key] != null);
+  if (filled.length === 0) return null;
+  return (
+    <div className="border-t border-gray-100 pt-3 mt-3">
+      <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">Medidas del cliente</p>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-1">
+        {filled.map(({ key, label, unit }) => (
+          <div key={key} className="flex justify-between text-xs">
+            <span className="text-gray-400">{label}</span>
+            <span className="text-gray-700 font-medium">{measurement[key]}{unit ? ` ${unit}` : ''}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
 
 export default function QuotesPage() {
@@ -84,6 +112,10 @@ export default function QuotesPage() {
                 <p className="text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-3">
                   {q.description}
                 </p>
+
+                {isManufacturer && q.client.measurement && (
+                  <MeasurementSummary measurement={q.client.measurement} />
+                )}
 
                 {isManufacturer && q.status === 'PENDING' && (
                   <div className="flex gap-2 mt-4">
