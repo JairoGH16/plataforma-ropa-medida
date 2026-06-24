@@ -106,19 +106,31 @@ describe('ManufacturersService', () => {
       {
         ...mockManufacturer,
         id: 'm-1',
-        manufacturerProfile: { ...mockProfile, garmentTypes: 'Trajes, Camisas', experience: 20 },
+        manufacturerProfile: {
+          ...mockProfile,
+          garmentTypes: 'Trajes, Camisas',
+          experience: 20,
+        },
       },
       {
         ...mockManufacturer,
         id: 'm-2',
         name: 'Confecciones Mora',
-        manufacturerProfile: { ...mockProfile, garmentTypes: 'Pantalones, Camisas', experience: 5 },
+        manufacturerProfile: {
+          ...mockProfile,
+          garmentTypes: 'Pantalones, Camisas',
+          experience: 5,
+        },
       },
       {
         ...mockManufacturer,
         id: 'm-3',
         name: 'Taller Vargas',
-        manufacturerProfile: { ...mockProfile, garmentTypes: 'Uniformes', experience: 3 },
+        manufacturerProfile: {
+          ...mockProfile,
+          garmentTypes: 'Uniformes',
+          experience: 3,
+        },
       },
     ];
 
@@ -142,8 +154,15 @@ describe('ManufacturersService', () => {
     });
 
     it('excludes manufacturers without profile', async () => {
-      const withoutProfile = { ...mockManufacturer, id: 'm-4', manufacturerProfile: null };
-      mockPrisma.user.findMany.mockResolvedValue([...manufacturers, withoutProfile]);
+      const withoutProfile = {
+        ...mockManufacturer,
+        id: 'm-4',
+        manufacturerProfile: null,
+      };
+      mockPrisma.user.findMany.mockResolvedValue([
+        ...manufacturers,
+        withoutProfile,
+      ]);
       const result = await service.getSuggestions('Camisas');
       expect(result.every((m) => m.id !== 'm-4')).toBe(true);
     });
