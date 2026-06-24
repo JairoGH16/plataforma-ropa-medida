@@ -66,14 +66,20 @@ export class ManufacturersService {
           .split(',')
           .map((t) => t.trim().toLowerCase());
         const exactMatch = types.includes(query);
-        const partialMatch = !exactMatch && types.some((t) => t.includes(query));
+        const partialMatch =
+          !exactMatch && types.some((t) => t.includes(query));
         const matchScore = exactMatch ? 100 : partialMatch ? 50 : 0;
         const score = matchScore + (profile.experience ?? 0);
         return { ...m, score, matchScore };
       })
       .filter((m) => m.matchScore > 0)
       .sort((a, b) => b.score - a.score)
-      .map(({ score: _score, matchScore: _matchScore, ...m }) => m);
+      .map((m) => {
+        const { score, matchScore, ...rest } = m;
+        void score;
+        void matchScore;
+        return rest;
+      });
 
     return scored;
   }
